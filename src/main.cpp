@@ -6,14 +6,16 @@ class Body
 public:
     sf::Vector2f position;
     sf::Vector2f velocity;
+    std::vector<int> color;
     float radius;
     float mass;
     bool position_locked;
 
-    Body(sf::Vector2f position, sf::Vector2f velocity, float radius, float mass, bool position_locked)
+    Body(sf::Vector2f position, sf::Vector2f velocity, std::vector<int> color, float radius, float mass, bool position_locked)
     {
         this->position = position;
         this->velocity = velocity;
+        this->color = color;
         this->radius = radius;
         this->mass = mass;
         this->position_locked = position_locked;
@@ -34,7 +36,7 @@ public:
     void draw(sf::RenderWindow& window)
     {
         sf::CircleShape object(radius);
-        object.setFillColor(sf::Color(255, 255, 255));
+        object.setFillColor(sf::Color(color[0], color[1], color[2]));
         object.setPosition(position);
         window.draw(object);
     }
@@ -43,18 +45,19 @@ public:
 int main()
 {   
     constexpr float G  = 6.674e-11, RADIUS_SCALE = 1e-5;
-    constexpr float M_BODY1 = 5.972e24, R_BODY1 = 6.371e6;
-    constexpr float M_BODY2 = 7.35e22, R_BODY2 = 1.737e6;
+    constexpr float R_BODY1 = 6.371e6 , R_BODY2 = 1.737e6; 
+    constexpr float M_BODY1 = 5.972e24, M_BODY2 = 7.35e22; // in kg
 
-    int TIME_DELAY = 16;
+    int timeDelay = 16; // in ms
+
     sf::Font font("IBMPlexMono-Regular.ttf");
     
     sf::RenderWindow window(sf::VideoMode({3840, 2160}), "Delta Orbital Simulator v1");
 
     std::vector<Body> bodies = 
     {
-        Body(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f{0.0f, 0.0f}, R_BODY1 * RADIUS_SCALE, M_BODY1 / 100, false),
-        Body(sf::Vector2f{1000.0f, 2100.0f}, sf::Vector2f{-42.0f, -3.0f}, R_BODY2 * RADIUS_SCALE, M_BODY2 / 1000, false),
+        Body(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f{0.0f, 0.0f}, {0, 0, 255}, R_BODY1 * RADIUS_SCALE, M_BODY1 / 100, true),
+        Body(sf::Vector2f{1000.0f, 2100.0f}, sf::Vector2f{-42.0f, -3.0f}, {255, 255, 255}, R_BODY2 * RADIUS_SCALE, M_BODY2 / 1000, false)
     };
     
     while (window.isOpen())
@@ -65,15 +68,15 @@ int main()
                 window.close();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) && TIME_DELAY < 100)
-            TIME_DELAY++;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) && timeDelay < 100)
+            timeDelay++;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) && TIME_DELAY > 1)
-            TIME_DELAY--;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) && timeDelay > 1)
+            timeDelay--;
 
         window.clear();
         
-        sf::Text text(font, "Delay:" + std::to_string(TIME_DELAY) + " ms", 50);
+        sf::Text text(font, "Delay:" + std::to_string(timeDelay) + " ms", 50);
         text.setFillColor(sf::Color(255, 255, 255));
         text.setPosition({3450.f, 2010.f});
         
@@ -101,6 +104,6 @@ int main()
 
         window.draw(text);
         window.display();
-        sf::sleep(sf::milliseconds(TIME_DELAY));
+        sf::sleep(sf::milliseconds(timeDelay));
     }
 }
