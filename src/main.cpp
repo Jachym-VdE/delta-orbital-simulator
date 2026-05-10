@@ -8,13 +8,15 @@ public:
     sf::Vector2f velocity;
     float radius;
     float mass;
+    bool position_locked;
 
-    Body(sf::Vector2f position, sf::Vector2f velocity, float radius, float mass)
+    Body(sf::Vector2f position, sf::Vector2f velocity, float radius, float mass, bool position_locked)
     {
         this->position = position;
         this->velocity = velocity;
         this->radius = radius;
         this->mass = mass;
+        this->position_locked = position_locked;
     }
     
     void accelerate(float x, float y)
@@ -51,8 +53,8 @@ int main()
 
     std::vector<Body> bodies = 
     {
-        Body(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f{0.0f, 0.0f}, R_BODY1 * RADIUS_SCALE, M_BODY1 / 100),
-        Body(sf::Vector2f{1000.0f, 2100.0f}, sf::Vector2f{-42.0f, -3.0f}, R_BODY2 * RADIUS_SCALE, M_BODY2 / 1000),
+        Body(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f{0.0f, 0.0f}, R_BODY1 * RADIUS_SCALE, M_BODY1 / 100, false),
+        Body(sf::Vector2f{1000.0f, 2100.0f}, sf::Vector2f{-42.0f, -3.0f}, R_BODY2 * RADIUS_SCALE, M_BODY2 / 1000, false),
     };
     
     while (window.isOpen())
@@ -80,6 +82,7 @@ int main()
             for (auto& body2 : bodies)
             {
                 if(&body == &body2){continue;}
+                if(body.position_locked == true){continue;}
                 float dx = body2.position.x - body.position.x;
                 float dy = body2.position.y - body.position.y;
                 float distance = sqrt(dx*dx + dy*dy);
