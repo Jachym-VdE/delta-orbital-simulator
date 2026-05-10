@@ -6,12 +6,12 @@ class Body
 public:
     sf::Vector2f position;
     sf::Vector2f velocity;
-    std::vector<int> color;
+    sf::Vector3i color;
     float radius;
     float mass;
     bool position_locked;
 
-    Body(sf::Vector2f position, sf::Vector2f velocity, std::vector<int> color, float radius, float mass, bool position_locked)
+    Body(sf::Vector2f position, sf::Vector2f velocity, sf::Vector3i color, float radius, float mass, bool position_locked)
     {
         this->position = position;
         this->velocity = velocity;
@@ -36,7 +36,7 @@ public:
     void draw(sf::RenderWindow& window)
     {
         sf::CircleShape object(radius);
-        object.setFillColor(sf::Color(color[0], color[1], color[2]));
+        object.setFillColor(sf::Color(color.x, color.y, color.z));
         object.setPosition(position);
         window.draw(object);
     }
