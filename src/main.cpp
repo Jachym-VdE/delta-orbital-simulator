@@ -57,7 +57,7 @@ int main()
     std::vector<Body> bodies = 
     {
         Body(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f{0.0f, 0.0f}, {0, 0, 255}, R_BODY1 * RADIUS_SCALE, M_BODY1 / 100, true),
-        Body(sf::Vector2f{1000.0f, 2100.0f}, sf::Vector2f{-42.0f, -3.0f}, {255, 255, 255}, R_BODY2 * RADIUS_SCALE, M_BODY2 / 1000, false)
+        Body(sf::Vector2f{1200.0f, 1500.0f}, sf::Vector2f{-30.0f, -50.0f}, {255, 255, 255}, R_BODY2 * RADIUS_SCALE, M_BODY2 / 1000, false)
     };
     
     while (window.isOpen())
@@ -85,7 +85,11 @@ int main()
             for (auto& body2 : bodies)
             {
                 if(&body == &body2){continue;}
-                if(body.position_locked == true){continue;}
+                if(body.position_locked){continue;}
+
+                while (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+                    sf::sleep(sf::milliseconds(100));
+
                 float dx = body2.position.x - body.position.x;
                 float dy = body2.position.y - body.position.y;
                 float distance = sqrt(dx*dx + dy*dy);
